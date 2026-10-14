@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101326">
+<meta name="description" content="SigmaMind Brain Academy — Study, Vocabulary, Quiz and Brain Games">
+<title>SigmaMind Brain Academy</title>
+<style>
+:root{
+ --bg:#101326;--panel:#1b2039;--card:#242b49;
+ --text:#f4f5ff;--muted:#aab2d0;--blue:#6685ff;
+ --purple:#a477ff;--green:#43d9a3;--red:#ff6b81;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+ margin:0;background:var(--bg);color:var(--text);
+ font-family:system-ui,"Noto Sans Bengali",sans-serif;
+ overflow-x:hidden;line-height:1.5;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0;touch-action:manipulation}
+button:focus-visible,select:focus-visible,input:focus-visible,
+textarea:focus-visible{outline:2px solid var(--purple);outline-offset:3px}
+button:disabled{cursor:not-allowed;opacity:.8}
+
+/* Professional Gaming Splash Screen Animation */
+.splash-screen{
+ position:fixed;inset:0;background:var(--bg);z-index:9999;
+ display:grid;place-items:center;transition:opacity .6s ease,visibility .6s ease;
+}
+.splash-screen.fade-out{opacity:0;visibility:hidden}
+.splash-content{text-align:center;padding:20px}
+.splash-badge{
+ display:inline-flex;align-items:center;justify-content:center;gap:12px;
+ padding:14px 32px;background:linear-gradient(135deg,rgba(102,133,255,0.15),rgba(164,119,255,0.15));
+ border:2px solid var(--blue);border-radius:24px;
+ box-shadow:0 0 35px rgba(102,133,255,0.4), inset 0 0 15px rgba(102,133,255,0.2);
+ margin-bottom:14px;animation:pulseBadge 1.5s infinite alternate;
+}
+.splash-icon{font-size:28px;filter:drop-shadow(0 0 10px var(--blue))}
+.splash-logo{
+ font-size:40px;font-weight:950;letter-spacing:4px;
+ background:linear-gradient(135deg,#ffffff,var(--blue),var(--purple));
+ -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+ filter:drop-shadow(0 0 15px rgba(102,133,255,0.8));
+ text-transform:uppercase;
+}
+.splash-subtitle{font-size:12px;color:var(--muted);letter-spacing:5px;text-transform:uppercase;margin-bottom:28px;font-weight:700}
+.splash-loader{width:200px;height:5px;background:#242b49;border-radius:5px;margin:auto;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,0.5)}
+.splash-bar{width:0%;height:100%;background:linear-gradient(90deg,var(--blue),var(--purple),var(--green));animation:loadBar 1.8s cubic-bezier(0.1,0.8,0.3,1) forwards}
+@keyframes pulseBadge{
+ from{transform:scale(0.97);border-color:var(--blue);box-shadow:0 0 20px rgba(102,133,255,0.3)}
+ to{transform:scale(1.03);border-color:var(--purple);box-shadow:0 0 40px rgba(164,119,255,0.8)}
+}
+@keyframes loadBar{to{width:100%}}
+
+/* Name Setup Modal */
+.modal-overlay{
+ position:fixed;inset:0;background:rgba(16,19,38,0.85);z-index:998;
+ display:grid;place-items:center;backdrop-filter:blur(8px);
+}
+.modal-box{
+ background:var(--panel);border:1px solid #303858;border-radius:24px;
+ padding:24px;width:90%;max-width:400px;text-align:center;
+ box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+.modal-box h3{margin-top:0;font-size:22px;color:var(--blue)}
+.modal-box input{
+ width:100%;padding:12px;background:#11172c;border:1px solid #3b4567;
+ border-radius:12px;color:white;margin:14px 0;text-align:center;font-size:16px;font-weight:700;
+}
+
+.app{width:100%;max-width:760px;margin:auto;padding:16px 14px 105px}
+header{display:flex;align-items:center;gap:12px;margin:6px 0 20px}
+.logo-emblem{
+ width:48px;height:48px;flex-shrink:0;border-radius:16px;
+ background:linear-gradient(135deg,#1b2039,#242b49);
+ border:2px solid var(--blue);
+ display:grid;place-items:center;font-size:20px;font-weight:900;
+ color:var(--blue);box-shadow:0 0 15px rgba(102,133,255,0.4);
+}
+h1{font-size:18px;margin:0}
+.sub{font-size:12px;color:var(--muted);margin-top:3px}
+h2{font-size:20px;margin:16px 0 8px;line-height:1.4}
+p{line-height:1.65}
+.panel{
+ background:var(--panel);border:1px solid #303858;
+ border-radius:20px;padding:16px;margin-bottom:14px;min-width:0;
+}
+.hero{background:linear-gradient(135deg,#27386b,#513878);border:0;padding:21px}
+.hero h2{margin:0 0 8px;font-size:24px}
+.muted{color:var(--muted);font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:18px}
+.stat{background:#ffffff12;border-radius:13px;padding:11px 5px;text-align:center;min-width:0}
+.stat strong{display:block;font-size:21px;overflow-wrap:anywhere}
+.stat span{font-size:11px;color:#d9defa}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.subject{
+ background:var(--card);border:1px solid #333d61;color:var(--text);
+ border-radius:16px;padding:14px;text-align:left;min-height:100px;min-width:0;
+ transition:transform .15s,border-color .15s;
+}
+.subject:active,.btn:active,.option:active{transform:scale(.98)}
+.subject .emoji{font-size:24px}
+.subject strong{display:block;margin-top:7px;font-size:14px;overflow-wrap:anywhere}
+.subject small{display:block;color:var(--muted);margin-top:3px}
+.file-upload-btn{
+ display:block;width:100%;padding:14px;background:#11172c;border:2px dashed var(--blue);
+ border-radius:12px;color:var(--text);text-align:center;font-weight:700;cursor:pointer;
+ margin-top:6px;transition:background .15s,border-color .15s;
+}
+.file-upload-btn:hover{background:rgba(102,133,255,0.1);border-color:var(--purple)}
+.btn{
+ background:var(--blue);color:white;padding:12px 15px;
+ border-radius:12px;font-weight:700;line-height:1.5;overflow-wrap:anywhere;
+ transition:filter .15s,transform .15s;
+}
+.btn:hover{filter:brightness(1.08)}
+.btn.secondary{background:#333b5c}
+.btn.green{background:#16875f}
+.btn.red{background:#8e3149}
+.btn.full{width:100%;margin-top:10px;display:block}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.row>*{flex:1;min-width:0}
+select,textarea,input[type=text]{
+ width:100%;padding:11px;background:#11172c;border:1px solid #3b4567;
+ border-radius:11px;color:white;margin-top:6px;
+}
+select option{background:#11172c;color:white}
+textarea{resize:vertical;line-height:1.5}
+label{font-size:13px;color:var(--muted);display:block;margin-top:12px}
+.hidden{display:none!important}
+.question-top{
+ display:flex;justify-content:space-between;gap:10px;color:var(--muted);
+ font-size:13px;flex-wrap:wrap;
+}
+.progress{height:7px;background:#343b59;border-radius:9px;overflow:hidden;margin:12px 0}
+.progress div{
+ height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--purple));
+ transition:width .25s ease;
+}
+#question,#gameQuestion{
+ font-size:19px;line-height:1.65;margin:20px 0;overflow-wrap:anywhere;
+ white-space:pre-line;
+}
+.options{display:grid;gap:10px}
+.option{
+ padding:13px;text-align:left;background:var(--card);
+ border:1px solid #3b4567;border-radius:13px;color:var(--text);
+ line-height:1.55;overflow-wrap:anywhere;min-width:0;
+}
+.option.correct{border-color:var(--green);background:#164838}
+.option.wrong{border-color:var(--red);background:#512538}
+#feedback{
+ margin-top:14px;padding:12px;border-radius:12px;
+ background:#11172c;line-height:1.7;overflow-wrap:anywhere;
+}
+.bottom{
+ position:fixed;bottom:0;left:0;right:0;background:#151a2df5;
+ border-top:1px solid #343b59;display:flex;justify-content:space-around;
+ gap:4px;padding:8px 5px calc(8px + env(safe-area-inset-bottom));
+ z-index:5;backdrop-filter:blur(12px);
+}
+.bottom button{
+ background:transparent;color:var(--muted);padding:10px 8px;
+ border-radius:10px;font-size:13px;font-weight:700;flex:1;min-width:0;
+ white-space:normal;line-height:1.35;
+}
+.bottom button.active{background:#30395e;color:white}
+#toast{
+ position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));
+ left:50%;transform:translateX(-50%);background:#e7eaff;color:#14182c;
+ padding:11px 15px;border-radius:12px;display:none;z-index:9;
+ width:max-content;max-width:90%;font-size:13px;overflow-wrap:anywhere;
+ box-shadow:0 4px 15px #0005;
+}
+.small{font-size:12px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
+.vocab-card{
+ background:var(--card);border:1px solid #3b4567;
+ border-radius:15px;padding:15px;margin-bottom:11px;
+}
+.vocab-card.learned{border-color:var(--green);background:#183b38}
+.vocab-word{font-size:21px;font-weight:800;overflow-wrap:anywhere}
+.vocab-pronunciation{color:#d0c0ff;font-size:14px;margin-top:5px}
+.vocab-meaning{font-size:16px;margin-top:8px}
+.vocab-example{font-size:13px;line-height:1.7;color:var(--muted);margin-top:8px;overflow-wrap:anywhere}
+.vocab-learned{
+ background:#16875f;color:white;padding:10px 13px;border-radius:10px;
+ font-weight:700;margin-top:12px;width:100%;
+}
+.vocab-learned:disabled{background:#285b4d;color:#c8f8e5}
+.vocab-day{background:#11172c;border-radius:12px;padding:12px;margin-bottom:14px}
+.page-transition{animation:pageFadeIn .35s cubic-bezier(.16,1,.3,1) both}
+@keyframes pageFadeIn{
+ from{opacity:0;transform:translateY(8px)}
+ to{opacity:1;transform:translateY(0)}
+}
+@media(min-width:520px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:360px){
+ .app{padding-left:10px;padding-right:10px}
+ .panel{padding:12px}
+ .bottom button{font-size:12px;padding:9px 4px}
+ h1{font-size:17px}
+ .hero h2{font-size:21px}
+ .stats{gap:5px}
+ .stat strong{font-size:18px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- First Time Name Setup Modal -->
+<div id="nameModal" class="modal-overlay hidden">
+ <div class="modal-box">
+  <h3>স্বাগতম, ফাইটার! ⚡</h3>
+  <p class="muted">তোমার নাম বা ডাকনাম সেট করো, যাতে অ্যাপটি তোমাকে নিজের মতো করে চিনতে পারে।</p>
+  <input type="text" id="modalNameInput" placeholder="তোমার নাম (যেমন: জীবন)" value="জীবন" maxlength="30">
+  <button class="btn full" onclick="saveUserNameFromModal()">শুরু করা যাক →</button>
+ </div>
+</div>
+
+<!-- Professional Gaming Splash Screen Animation with JIBON -->
+<div id="splashScreen" class="splash-screen">
+ <div class="splash-content">
+  <div class="splash-badge">
+   <div class="splash-icon">⚡</div>
+   <div class="splash-logo">JIBON</div>
+  </div>
+  <div class="splash-subtitle">SigmaMind Brain Academy</div>
+  <div class="splash-loader"><div class="splash-bar"></div></div>
+ </div>
+</div>
+
+<div class="app">
+<header>
+ <div class="logo-emblem" aria-hidden="true">ΣQ</div>
+ <div>
+  <h1>SigmaMind Brain Academy</h1>
+  <div class="sub">Learn • Think • Level Up</div>
+ </div>
+</header>
+
+<section id="home">
+ <div class="panel hero">
+  <div class="sub" id="welcomeUserSub">WELCOME TO YOUR STUDY ARENA</div>
+  <h2>স্বাগতম, <span id="displayUserName">জীবন</span>!<br>শিখবে তুমি, জিতবে তোমার মেধা!</h2>
+  <p class="muted">HSC Humanities · ICT · GK · Brain Test</p>
+  <div class="stats">
+   <div class="stat"><strong id="totalPlayed">0</strong><span>উত্তর দিয়েছ</span></div>
+   <div class="stat"><strong id="totalCorrect">0</strong><span>সঠিক উত্তর</span></div>
+   <div class="stat"><strong id="accuracy">0%</strong><span>সাফল্য</span></div>
+  </div>
+ </div>
+ <h2>📚 তোমার বিষয়গুলো</h2>
+ <p class="muted">একটি বিষয় নির্বাচন করে কুইজ শুরু করো। Vocabulary থেকে আগে শব্দ শেখো, তারপর কুইজ দাও।</p>
+ <div id="subjects" class="grid"></div>
+ <div class="panel" style="margin-top:16px">
+  <h2>⚡ দ্রুত খেলা</h2>
+  <label for="quickMode">Difficulty</label>
+  <select id="quickMode">
+   <option value="normal">Normal Mode</option>
+   <option value="hard">Hard Mode</option>
+  </select>
+  <button class="btn full" onclick="startQuiz('all')">সব বিষয় থেকে কুইজ শুরু</button>
+  <button class="btn secondary full" onclick="showPage('games')">🧩 Brain Games · Hard Level</button>
+  <button class="btn secondary full" onclick="openVocabularyLearn()">📚 English Vocabulary শেখো</button>
+  <button class="btn secondary full" onclick="startQuiz('vocabulary')">📝 শেখা শব্দের কুইজ</button>
+ </div>
+</section>
+
+<section id="vocabularyLearn" class="hidden">
+ <div class="panel">
+  <button class="btn secondary" onclick="goHome()">← হোমে ফিরে যাও</button>
+  <h2>📚 English Vocabulary শেখো</h2>
+  <p class="muted">প্রতিদিন ২০টি শব্দ শেখো। উচ্চারণ, বাংলা অর্থ ও উদাহরণ পড়ে শেষে “শিখেছি” চাপ দাও।</p>
+  <div class="vocab-day">
+   <strong id="vocabDayTitle">আজকের ২০টি শব্দ</strong>
+   <p id="vocabCounts" class="muted">শেখা হয়েছে: ০</p>
+   <div class="progress"><div id="vocabBar"></div></div>
+  </div>
+  <button class="btn full" onclick="startQuiz('vocabulary')">📝 শেখা শব্দের কুইজ দাও</button>
+  <div id="vocabWordList" style="margin-top:16px"></div>
+  <button class="btn secondary full" onclick="goHome()">← হোমে ফিরে যাও</button>
+ </div>
+</section>
+
+<section id="quiz" class="hidden">
+ <div class="panel">
+  <button class="btn secondary" onclick="goHome()">← Back to Home</button>
+  <div class="question-top" style="margin-top:16px">
+   <span id="quizSubject">বিষয়</span>
+   <span>⏱ <b id="timer">20</b>s</span>
+  </div>
+  <div class="progress"><div id="bar"></div></div>
+  <div class="question-top">
+   <span id="counter">প্রশ্ন ১</span>
+   <span id="points">স্কোর: ০</span>
+  </div>
+  <h2 id="question"></h2>
+  <div id="options" class="options"></div>
+  <div id="feedback" class="hidden" aria-live="polite"></div>
+  <button id="next" class="btn full hidden" onclick="nextQuestion()">পরের প্রশ্ন →</button>
+  <button class="btn secondary full" onclick="goHome()">← কুইজ ছেড়ে হোমে যাও</button>
+ </div>
+</section>
+
+<section id="result" class="hidden">
+ <div class="panel hero">
+  <h2>🏆 কুইজ শেষ!</h2>
+  <p id="resultText"></p>
+  <div class="stats">
+   <div class="stat"><strong id="finalScore">0</strong><span>স্কোর</span></div>
+   <div class="stat"><strong id="finalCorrect">0</strong><span>সঠিক</span></div>
+   <div class="stat"><strong id="finalPercent">0%</strong><span>ফলাফল</span></div>
+  </div>
+  <button class="btn full" onclick="goHome()">হোমে ফিরে যাও</button>
+  <button class="btn secondary full" onclick="showWrong()">ভুল উত্তর দেখো</button>
+ </div>
+</section>
+
+<section id="wrongPage" class="hidden">
+ <div class="panel">
+  <h2>📝 ভুল উত্তরের খাতা</h2>
+  <p class="muted">ভুল হওয়া প্রশ্নগুলো এখানে থাকবে, যাতে পরে আবার অনুশীলন করতে পারো।</p>
+  <div id="wrongList"></div>
+  <button class="btn full" onclick="goHome()">← হোমে ফিরে যাও</button>
+ </div>
+</section>
+
+<section id="settings" class="hidden">
+ <div class="panel">
+  <h2>⚙️ Settings & Profile</h2>
+  <p class="muted">তোমার প্রোফাইল নাম পরিবর্তন করো অথবা JSON ফাইল থেকে প্রশ্ন আপডেট করো।</p>
+  
+  <label for="profileNameInput">তোমার নাম (Profile Name)</label>
+  <div class="row">
+   <input id="profileNameInput" type="text" placeholder="নাম লিখো">
+   <button class="btn" style="margin-top:6px;flex:0 0 110px;" onclick="updateProfileName()">সেভ নাম</button>
+  </div>
+
+  <label style="margin-top:16px">১. JSON ফাইল নির্বাচন</label>
+  <!-- Fixed file input button wrapper for reliable mobile click interaction -->
+  <label for="importFile" class="file-upload-btn">
+    📁 <span id="fileNameDisplay">ফাইল সিলেক্ট করতে এখানে চাপুন (.json)</span>
+  </label>
+  <input id="importFile" type="file" accept=".json,application/json" class="hidden" onchange="handleFileSelect(this)">
+  
+  <button class="btn full" onclick="importQuestions()">📥 JSON ইমপোর্ট করো</button>
+  <p class="muted small">ফাইল কাজ না করলে নিচে JSON কোড পেস্ট করো।</p>
+  <label for="jsonPaste">২. JSON কোড পেস্ট করার বিকল্প</label>
+  <textarea id="jsonPaste" rows="5" placeholder='{"questions":[...]}' autocapitalize="off" spellcheck="false"></textarea>
+  <button class="btn secondary full" onclick="importQuestions()">পেস্ট করা JSON ইমপোর্ট করো</button>
+  <button class="btn secondary full" onclick="exportQuestions()">📤 প্রশ্নব্যাংক Export</button>
+  <button class="btn secondary full" onclick="exportProgress()">💾 Progress Backup</button>
+  <label for="language">প্রশ্নের ভাষা</label>
+  <select id="language" onchange="saveSettings()">
+   <option value="both">বাংলা + English</option>
+   <option value="bn">শুধু বাংলা</option>
+   <option value="en">English</option>
+  </select>
+ </div>
+ <div class="panel">
+  <h2>তোমার অগ্রগতি</h2>
+  <p id="progressSummary" class="muted"></p>
+  <button class="btn red full" onclick="resetProgress()">সব অগ্রগতি মুছবে</button>
+  <button class="btn secondary full" onclick="goHome()">← হোমে ফিরে যাও</button>
+ </div>
+</section>
+
+<section id="games" class="hidden">
+ <div class="panel">
+  <h2>🧩 SigmaMind Brain Games</h2>
+  <p class="muted">Hard Level · প্রতি চ্যালেঞ্জে ১০ সেকেন্ড</p>
+  <label for="gameType">গেম নির্বাচন করো</label>
+  <select id="gameType">
+   <option value="sequence">Number Sequence</option>
+   <option value="logic">Logic Challenge</option>
+   <option value="math">Mental Math</option>
+   <option value="odd">Odd One Out</option>
+  </select>
+  <button class="btn full" onclick="startBrainGame()">গেম শুরু করো</button>
+  <div id="gameArea" class="hidden">
+   <div class="question-top">
+    <span id="gameCounter">চ্যালেঞ্জ ১/৫</span>
+    <span>⏱ <b id="gameTimer">10</b>s</span>
+   </div>
+   <div class="progress"><div id="gameBar"></div></div>
+   <h2 id="gameQuestion"></h2>
+   <div id="gameOptions" class="options"></div>
+   <div id="gameFeedback" class="muted" style="margin-top:12px;line-height:1.7" aria-live="polite"></div>
+   <button id="gameNext" class="btn full hidden" onclick="nextBrainGame()">পরের চ্যালেঞ্জ →</button>
+  </div>
+  <button class="btn secondary full" onclick="goHome()">← হোমে ফিরে যাও</button>
+ </div>
+</section>
+
+<footer>Created by Jibon Roy · SigmaMind Brain Academy</footer>
+</div>
+
+<nav class="bottom" aria-label="প্রধান নেভিগেশন">
+ <button id="navHome" class="active" onclick="goHome()">⌂ Home</button>
+ <button id="navWrong" onclick="showWrong()">✎ ভুল উত্তর</button>
+ <button id="navSettings" onclick="showPage('settings')">⚙ Settings</button>
+</nav>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+const SUBJECTS = [
+ {id:"bangla",name:"বাংলা",icon:"📖",desc:"সাহিত্য ও ব্যাকরণ"},
+ {id:"english",name:"English",icon:"🔤",desc:"Grammar & Vocabulary"},
+ {id:"vocabulary",name:"English Vocabulary",icon:"📚",desc:"শব্দ শেখো ও কুইজ দাও"},
+ {id:"history",name:"ইতিহাস",icon:"🏛️",desc:"বাংলাদেশ ও বিশ্ব"},
+ {id:"civics",name:"পৌরনীতি ও সুশাসন",icon:"⚖️",desc:"নাগরিকতা ও সরকার"},
+ {id:"geography",name:"ভূগোল",icon:"🌍",desc:"পরিবেশ ও মানচিত্র"},
+ {id:"economics",name:"অর্থনীতি",icon:"📈",desc:"বাজার ও অর্থনীতি"},
+ {id:"socialwork",name:"সমাজকর্ম",icon:"🤝",desc:"সমাজকল্যাণ"},
+ {id:"ict",name:"ICT",icon:"💻",desc:"Number System & Logic"},
+ {id:"gk",name:"সাধারণ জ্ঞান",icon:"🧠",desc:"বাংলাদেশ ও বিশ্ব"},
+ {id:"brain",name:"Brain Test",icon:"🧩",desc:"যুক্তি ও ধাঁধা"}
+];
+
+const BUILTIN = [
+{id:"ENG-001",subject:"english",topic:"Tense",difficulty:"normal",q:"Choose the correct sentence.",bn:"সঠিক বাক্যটি বেছে নাও।",options:["He go to school.","He goes to school.","He going school.","He gone school."],answer:1,explanation:"Present Simple-এ He/She/It-এর সঙ্গে সাধারণত verb-এর শেষে s/es যোগ হয়।"},
+{id:"ENG-002",subject:"english",topic:"Article",difficulty:"normal",q:"He is ___ honest man.",bn:"He is ___ honest man. শূন্যস্থানে কী হবে?",options:["a","an","the","no article"],answer:1,explanation:"Honest শব্দে h উচ্চারিত হয় না; শুরুতে vowel sound থাকায় an হবে।"},
+{id:"ENG-003",subject:"english",topic:"Vocabulary",difficulty:"normal",q:"What is the synonym of 'Brave'?",bn:"Brave শব্দের সমার্থক কোনটি?",options:["Cowardly","Courageous","Weak","Lazy"],answer:1,explanation:"Brave-এর synonym হলো Courageous—সাহসী।"},
+{id:"VOC-001",subject:"vocabulary",topic:"Synonym",difficulty:"normal",q:"Choose the synonym of 'Abundant'.",bn:"Abundant শব্দের সমার্থক কোনটি?",options:["Scarce","Plentiful","Empty","Weak"],answer:1,explanation:"Abundant means plentiful — প্রচুর।"},
+{id:"VOC-002",subject:"vocabulary",topic:"Antonym",difficulty:"normal",q:"Choose the antonym of 'Ancient'.",bn:"Ancient শব্দের বিপরীতার্থক কোনটি?",options:["Old","Historic","Modern","Past"],answer:2,explanation:"Ancient means very old; its antonym is Modern — আধুনিক।"},
+{id:"VOC-003",subject:"vocabulary",topic:"Meaning",difficulty:"normal",q:"What does 'Reluctant' mean?",bn:"Reluctant শব্দের অর্থ কী?",options:["Eager","Unwilling","Happy","Brave"],answer:1,explanation:"Reluctant means unwilling or hesitant — অনিচ্ছুক।"},
+{id:"VOC-004",subject:"vocabulary",topic:"Synonym",difficulty:"hard",q:"Choose the synonym of 'Meticulous'.",bn:"Meticulous শব্দের সমার্থক কোনটি?",options:["Careless","Careful and precise","Angry","Ordinary"],answer:1,explanation:"Meticulous means showing great attention to detail — খুঁটিনাটি বিষয়ে অত্যন্ত সতর্ক।"},
+{id:"VOC-005",subject:"vocabulary",topic:"Antonym",difficulty:"hard",q:"Choose the antonym of 'Obsolete'.",bn:"Obsolete শব্দের বিপরীতার্থক কোনটি?",options:["Outdated","Ancient","Current","Useless"],answer:2,explanation:"Obsolete means outdated; current means up to date।"},
+{id:"BN-001",subject:"bangla",topic:"ব্যাকরণ",difficulty:"normal",q:"বাংলা ভাষার প্রধান রীতি কয়টি?",bn:"বাংলা ভাষার প্রধান রীতি কয়টি?",options:["একটি","দুটি","তিনটি","চারটি"],answer:1,explanation:"প্রধান রীতি দুটি—সাধু রীতি ও চলিত রীতি।"},
+{id:"BN-002",subject:"bangla",topic:"ব্যাকরণ",difficulty:"normal",q:"যে পদ দ্বারা ব্যক্তি, বস্তু, স্থান বা ভাবের নাম বোঝায় তাকে কী বলে?",bn:"যে পদ দ্বারা ব্যক্তি, বস্তু, স্থান বা ভাবের নাম বোঝায় তাকে কী বলে?",options:["বিশেষ্য","বিশেষণ","ক্রিয়া","অব্যয়"],answer:0,explanation:"নামবাচক পদকে বিশেষ্য বলে।"},
+{id:"ICT-001",subject:"ict",topic:"Number System",difficulty:"normal",q:"বাইনারি সংখ্যা পদ্ধতির ভিত্তি কত?",bn:"বাইনারি সংখ্যা পদ্ধতির ভিত্তি কত?",options:["২","৮","১০","১৬"],answer:0,explanation:"বাইনারি পদ্ধতিতে ০ ও ১ ব্যবহৃত হয়; ভিত্তি ২।"},
+{id:"ICT-002",subject:"ict",topic:"Logic Gate",difficulty:"normal",q:"AND Gate-এর আউটপুট 1 হয় কখন?",bn:"AND Gate-এর আউটপুট 1 হয় কখন?",options:["যেকোনো একটি ইনপুট 1 হলে","সব ইনপুট 0 হলে","সব ইনপুট 1 হলে","সব সময়"],answer:2,explanation:"AND Gate-এর সব ইনপুট 1 হলেই আউটপুট 1 হয়।"},
+{id:"ICT-003",subject:"ict",topic:"HTML",difficulty:"normal",q:"HTML-এ সবচেয়ে বড় সাধারণ heading tag কোনটি?",bn:"HTML-এ সবচেয়ে বড় সাধারণ heading tag কোনটি?",options:["<h6>","<head>","<h1>","<title>"],answer:2,explanation:"h1 হলো HTML-এর সর্বোচ্চ স্তরের heading tag।"},
+{id:"GK-001",subject:"gk",topic:"বাংলাদেশ",difficulty:"normal",q:"বাংলাদেশের স্বাধীনতা দিবস কবে?",bn:"বাংলাদেশের স্বাধীনতা দিবস কবে?",options:["২১ ফেব্রুয়ারি","২৬ মার্চ","১৬ ডিসেম্বর","১৪ এপ্রিল"],answer:1,explanation:"বাংলাদেশের স্বাধীনতা দিবস ২৬ মার্চ।"},
+{id:"GK-002",subject:"gk",topic:"বাংলাদেশ",difficulty:"normal",q:"বাংলাদেশের বিজয় দিবস কবে?",bn:"বাংলাদেশের বিজয় দিবস কবে?",options:["২৬ মার্চ","২১ ফেব্রুয়ারি","১৬ ডিসেম্বর","১ মে"],answer:2,explanation:"বাংলাদেশের বিজয় দিবস ১৬ ডিসেম্বর।"},
+{id:"HIST-001",subject:"history",topic:"বাংলাদেশের ইতিহাস",difficulty:"normal",q:"বাংলাদেশের মুক্তিযুদ্ধে বিজয় অর্জিত হয় কোন সালে?",bn:"বাংলাদেশের মুক্তিযুদ্ধে বিজয় অর্জিত হয় কোন সালে?",options:["১৯৫২","১৯৬৯","১৯৭১","১৯৭৫"],answer:2,explanation:"১৯৭১ সালের ১৬ ডিসেম্বর বাংলাদেশ বিজয় অর্জন করে।"},
+{id:"CIV-001",subject:"civics",topic:"রাষ্ট্র",difficulty:"normal",q:"রাষ্ট্রের অপরিহার্য উপাদান কয়টি?",bn:"রাষ্ট্রের অপরিহার্য উপাদান কয়টি?",options:["দুটি","তিনটি","চারটি","পাঁচটি"],answer:2,explanation:"রাষ্ট্রের চার উপাদান—জনসমষ্টি, নির্দিষ্ট ভূখণ্ড, সরকার ও সার্বভৌমত্ব।"},
+{id:"GEO-001",subject:"geography",topic:"বাংলাদেশ",difficulty:"normal",q:"বাংলাদেশের দক্ষিণে কোন জলভাগ অবস্থিত?",bn:"বাংলাদেশের দক্ষিণে কোন জলভাগ অবস্থিত?",options:["আরব সাগর","বঙ্গোপসাগর","ভূমধ্যসাগর","লোহিত সাগর"],answer:1,explanation:"বাংলাদেশের দক্ষিণে বঙ্গোপসাগর অবস্থিত।"},
+{id:"ECO-001",subject:"economics",topic:"মৌলিক ধারণা",difficulty:"normal",q:"অর্থনীতিতে চাহিদা বলতে কী বোঝায়?",bn:"অর্থনীতিতে চাহিদা বলতে কী বোঝায়?",options:["শুধু কোনো পণ্য পছন্দ করা","ক্রয়ক্ষমতা ও ইচ্ছাসহ পণ্য কেনার আকাঙ্ক্ষা","শুধু পণ্য উৎপাদন","পণ্য সংরক্ষণ"],answer:1,explanation:"অর্থনৈতিক চাহিদার সঙ্গে পণ্য কেনার ইচ্ছা ও ক্রয়ক্ষমতা যুক্ত থাকে।"},
+{id:"SW-001",subject:"socialwork",topic:"সমাজকর্ম",difficulty:"normal",q:"সমাজকর্মের অন্যতম প্রধান লক্ষ্য কী?",bn:"সমাজকর্মের অন্যতম প্রধান লক্ষ্য কী?",options:["সামাজিক সমস্যা বাড়ানো","মানুষের কল্যাণ ও সামাজিক কার্যক্ষমতা উন্নত করা","শুধু ব্যবসার মুনাফা বাড়ানো","মানুষকে সমাজ থেকে বিচ্ছিন্ন করা"],answer:1,explanation:"সমাজকর্ম মানুষের কল্যাণ, সমস্যা সমাধান ও সামাজিক কার্যক্ষমতা উন্নয়নে সহায়তা করে।"},
+{id:"BRAIN-001",subject:"brain",topic:"Logic",difficulty:"normal",q:"২, ৪, ৬, ৮, এরপর কোন সংখ্যা?",bn:"২, ৪, ৬, ৮, এরপর কোন সংখ্যা?",options:["৯","১০","১১","১২"],answer:1,explanation:"প্রতিবার ২ যোগ হচ্ছে; পরের সংখ্যা ১০।"},
+{id:"BRAIN-002",subject:"brain",topic:"Logic",difficulty:"hard",q:"একটি ঘড়িতে ৩টা বাজলে কাঁটা দুটির মধ্যবর্তী কোণ কত?",bn:"একটি ঘড়িতে ৩টা বাজলে কাঁটা দুটির মধ্যবর্তী কোণ কত?",options:["৩০°","৬০°","৯০°","১৮০°"],answer:2,explanation:"৩টায় মিনিটের কাঁটা ১২-তে ও ঘণ্টার কাঁটা ৩-এ থাকে; কোণ ৯০°।"}
+];
+
+const BASIC_VOCAB = [
+["W001","Accept","অ্যাকসেপ্ট","গ্রহণ করা","I accept your offer.","আমি তোমার প্রস্তাব গ্রহণ করি।"],
+["W002","Achieve","অ্যাচিভ","অর্জন করা","Work hard to achieve your goal.","লক্ষ্য অর্জনে কঠোর পরিশ্রম করো।"],
+["W003","Advice","অ্যাডভাইস","পরামর্শ","My teacher gave me good advice.","আমার শিক্ষক আমাকে ভালো পরামর্শ দিয়েছেন।"],
+["W004","Afraid","অ্যাফ্রেইড","ভীত","The child is afraid of darkness.","শিশুটি অন্ধকারে ভয় পায়।"],
+["W005","Agree","অ্যাগ্রি","একমত হওয়া","I agree with you.","আমি তোমার সঙ্গে একমত।"],
+["W006","Allow","অ্যালাউ","অনুমতি দেওয়া","My parents allow me to play.","আমার বাবা-মা আমাকে খেলতে অনুমতি দেন।"],
+["W007","Answer","আনসার","উত্তর","Please answer the question.","দয়া করে প্রশ্নটির উত্তর দাও।"],
+["W008","Arrive","অ্যারাইভ","পৌঁছানো","We arrive at school early.","আমরা তাড়াতাড়ি স্কুলে পৌঁছাই।"],
+["W009","Beautiful","বিউটিফুল","সুন্দর","The garden is beautiful.","বাগানটি সুন্দর।"],
+["W010","Believe","বিলিভ","বিশ্বাস করা","I believe your words.","আমি তোমার কথা বিশ্বাস করি।"],
+["W011","Brave","ব্রেইভ","সাহসী","The brave boy helped the child.","সাহসী ছেলেটি শিশুটিকে সাহায্য করেছিল।"],
+["W012","Careful","কেয়ারফুল","সতর্ক","Be careful on the road.","রাস্তায় সতর্ক থেকো।"],
+["W013","Choose","চুজ","বেছে নেওয়া","Choose the correct answer.","সঠিক উত্তরটি বেছে নাও।"],
+["W014","Clever","ক্লেভার","চতুর","The clever girl solved the puzzle.","চতুর মেয়েটি ধাঁধাটি সমাধান করেছিল।"],
+["W015","Common","কমন","সাধারণ","This is a common mistake.","এটি একটি সাধারণ ভুল।"],
+["W016","Complete","কমপ্লিট","সম্পূর্ণ করা","Complete your homework today.","আজ তোমার বাড়ির কাজ শেষ করো।"],
+["W017","Danger","ডেইনজার","বিপদ","Smoking can cause danger to health.","ধূমপান স্বাস্থ্যের জন্য বিপদ ডেকে আনতে পারে।"],
+["W018","Decide","ডিসাইড","সিদ্ধান্ত নেওয়া","I will decide tomorrow.","আমি আগামীকাল সিদ্ধান্ত নেব।"],
+["W019","Difficult","ডিফিকাল্ট","কঠিন","This question is difficult.","এই প্রশ্নটি কঠিন।"],
+["W020","Dream","ড্রিম","স্বপ্ন","I have a dream.","আমার একটি স্বপ্ন আছে।"],
+["W021","Early","আর্লি","আগে / তাড়াতাড়ি","I wake up early.","আমি তাড়াতাড়ি ঘুম থেকে উঠি।"],
+["W022","Easy","ইজি","সহজ","This lesson is easy.","এই পাঠটি সহজ।"],
+["W023","Enough","ইনাফ","যথেষ্ট","We have enough food.","আমাদের যথেষ্ট খাবার আছে।"],
+["W024","Explain","এক্সপ্লেইন","ব্যাখ্যা করা","Please explain this rule.","দয়া করে নিয়মটি ব্যাখ্যা করো।"],
+["W025","Famous","ফেইমাস","বিখ্যাত","He is a famous writer.","তিনি একজন বিখ্যাত লেখক।"],
+["W026","Fear","ফিয়ার","ভয়","Do not let fear stop you.","ভয়কে তোমাকে থামাতে দিও না।"],
+["W027","Friendly","ফ্রেন্ডলি","বন্ধুসুলভ","Our new teacher is friendly.","আমাদের নতুন শিক্ষক বন্ধুসুলভ।"],
+["W028","Future","ফিউচার","ভবিষ্যৎ","Think about your future.","তোমার ভবিষ্যৎ নিয়ে ভাবো।"],
+["W029","Gather","গ্যাদার","জড়ো করা","We gather information.","আমরা তথ্য সংগ্রহ করি।"],
+["W030","Gentle","জেন্টল","নম্র / কোমল","He has a gentle voice.","তার কণ্ঠস্বর কোমল।"],
+["W031","Honest","অনেস্ট","সৎ","An honest person tells the truth.","একজন সৎ মানুষ সত্য কথা বলেন।"],
+["W032","Improve","ইমপ্রুভ","উন্নতি করা","Practice every day to improve.","উন্নতি করতে প্রতিদিন অনুশীলন করো।"],
+["W033","Include","ইনক্লুড","অন্তর্ভুক্ত করা","The price includes breakfast.","দামের মধ্যে সকালের নাশতা অন্তর্ভুক্ত।"],
+["W034","Journey","জার্নি","ভ্রমণ / যাত্রা","Our journey was long.","আমাদের যাত্রা দীর্ঘ ছিল।"],
+["W035","Knowledge","নলেজ","জ্ঞান","Knowledge helps us grow.","জ্ঞান আমাদের এগিয়ে যেতে সাহায্য করে।"],
+["W036","Learn","লার্ন","শেখা","I learn English every day.","আমি প্রতিদিন ইংরেজি শিখি।"],
+["W037","Necessary","নেসেসারি","প্রয়োজনীয়","Water is necessary for life.","জীবনের জন্য পানি প্রয়োজনীয়।"],
+["W038","Notice","নোটিস","লক্ষ করা","Did you notice the change?","তুমি কি পরিবর্তনটি লক্ষ করেছ?"],
+["W039","Patient","পেইশেন্ট","ধৈর্যশীল","Be patient while learning.","শেখার সময় ধৈর্য ধরো।"],
+["W040","Polite","পোলাইট","ভদ্র","Always be polite to others.","অন্যদের সঙ্গে সবসময় ভদ্র আচরণ করো।"],
+["W041","Possible","পসিবল","সম্ভব","Anything is possible with effort.","চেষ্টা করলে অনেক কিছুই সম্ভব।"],
+["W042","Prepare","প্রিপেয়ার","প্রস্তুতি নেওয়া","I prepare for my exam.","আমি পরীক্ষার প্রস্তুতি নিই।"],
+["W043","Protect","প্রোটেক্ট","রক্ষা করা","Trees protect the environment.","গাছ পরিবেশ রক্ষা করে।"],
+["W044","Purpose","পারপাস","উদ্দেশ্য","What is the purpose of this task?","এই কাজের উদ্দেশ্য কী?"],
+["W045","Quiet","কোয়ায়েট","শান্ত / নীরব","The room is quiet.","ঘরটি শান্ত।"],
+["W046","Reason","রিজন","কারণ","Tell me the reason.","আমাকে কারণটি বলো।"],
+["W047","Receive","রিসিভ","গ্রহণ করা / পাওয়া","I received your message.","আমি তোমার বার্তাটি পেয়েছি।"],
+["W048","Remember","রিমেম্বার","মনে রাখা","Remember this important rule.","এই গুরুত্বপূর্ণ নিয়মটি মনে রেখো।"],
+["W049","Respect","রেসপেক্ট","সম্মান করা","আমাদের সবার প্রতি সম্মান দেখানো উচিত।"],
+["W050","Responsible","রেসপনসিবল","দায়িত্বশীল","She is a responsible student.","সে একজন দায়িত্বশীল শিক্ষার্থী।"],
+["W051","Safe","সেইফ","নিরাপদ","Keep your password safe.","তোমার পাসওয়ার্ড নিরাপদে রাখো।"],
+["W052","Simple","সিম্পল","সহজ / সরল","Use simple words.","সহজ শব্দ ব্যবহার করো।"],
+["W053","Success","সাকসেস","সাফল্য","Hard work can lead to success.","কঠোর পরিশ্রম সাফল্য এনে দিতে পারে।"],
+["W054","Support","সাপোর্ট","সহায়তা করা","My family supports me.","আমাদের পরিবার আমাদের সহায়তা করে।"],
+["W055","Thought","থট","চিন্তা / ভাবনা","That is an interesting thought.","এটি একটি মজার ভাবনা।"],
+["W056","Trust","ট্রাস্ট","বিশ্বাস করা","Trust yourself and keep trying.","নিজের ওপর বিশ্বাস রাখো এবং চেষ্টা চালিয়ে যাও।"],
+["W057","Useful","ইউসফুল","উপকারী","This book is useful.","এই বইটি উপকারী।"],
+["W058","Value","ভ্যালু","মূল্য","Time has great value.","সময়ের অনেক মূল্য আছে।"],
+["W059","Wise","ওয়াইজ","জ্ঞানী","A wise person learns from mistakes.","একজন জ্ঞানী মানুষ ভুল থেকে শেখেন।"],
+["W060","Wonder","ওয়ান্ডার","বিস্মিত হওয়া","I wonder how it works.","এটি কীভাবে কাজ করে তা ভেবে আমি বিস্মিত হই।"]
+];
+
+const KEY="sigmamind_v1";
+const USER_KEY="sigmamind_username";
+const VALID_LANGUAGES=["both","bn","en"];
+const VALID_SUBJECTS=SUBJECTS.map(s=>s.id);
+
+function freshProgress(){
+ return {played:0,correct:0,wrong:[],learnedVocabulary:[]};
+}
+let db={
+ questions:BUILTIN.map(q=>({...q,options:[...q.options]})),
+ progress:freshProgress(),
+ settings:{language:"both"}
+};
+let quiz={list:[],index:0,score:0,correct:0,answered:false,subject:"all",mode:"normal",time:20,interval:null};
+let brainGame={list:[],index:0,score:0,time:10,interval:null,done:false};
+let currentPage="home";
+let lastBackPressTime=0;
+let toastTimer=null;
+
+/* Username Management */
+function getUserName(){
+ return localStorage.getItem(USER_KEY) || "জীবন";
+}
+function setUserName(name){
+ const clean = (name || "জীবন").trim().substring(0, 30);
+ localStorage.setItem(USER_KEY, clean);
+ updateUserNameUI();
+}
+function updateUserNameUI(){
+ const name = getUserName();
+ const el = document.getElementById("displayUserName");
+ if(el) el.textContent = name;
+ const profileInput = document.getElementById("profileNameInput");
+ if(profileInput) profileInput.value = name;
+}
+function saveUserNameFromModal(){
+ const input = document.getElementById("modalNameInput").value;
+ setUserName(input);
+ document.getElementById("nameModal").classList.add("hidden");
+ toast(`স্বাগতম, ${getUserName()}! চলো শুরু করা যাক।`);
+}
+function updateProfileName(){
+ const input = document.getElementById("profileNameInput").value;
+ setUserName(input);
+ toast("প্রোফাইল নাম সফলভাবে আপডেট হয়েছে! ❤️‍🩹");
+}
+
+/* File Selection Handler for UI feedback */
+function handleFileSelect(input){
+ const display = document.getElementById("fileNameDisplay");
+ if(input.files && input.files[0]){
+  display.textContent = "নির্বাচিত ফাইল: " + input.files[0].name;
+ } else {
+  display.textContent = "ফাইল সিলেক্ট করতে এখানে চাপুন (.json)";
+ }
+}
+
+/* 4-Hour Emotional Reminder System */
+function initReminderSystem(){
+ const lastCheck = Number(localStorage.getItem("sigmamind_last_reminder") || Date.now());
+ const now = Date.now();
+ const fourHours = 4 * 60 * 60 * 1000;
+ 
+ if(now - lastCheck >= fourHours){
+  triggerEmotionalReminder();
+ }
+ 
+ setInterval(()=>{
+  const last = Number(localStorage.getItem("sigmamind_last_reminder") || Date.now());
+  if(Date.now() - last >= fourHours){
+   triggerEmotionalReminder();
+  }
+ }, 30 * 60 * 1000);
+}
+
+function triggerEmotionalReminder(){
+ const name = getUserName();
+ const messages = [
+  `${name}, অনেকক্ষণ তো বিরতি হলো! একটু বাস্তব দুনিয়ায় ঘুরে এসো, নয়তো অ্যাপে এসে একটু মেধা ঝালাই করে নাও ❤️‍🩹`,
+  `এই ${name}! একটু রিলাক্স করেছো তো? এবার চলো SigmaMind-এ কিছু নতুন শব্দ বা কুইজ প্র্যাকটিস করা যাক! 🚀`,
+  `${name}, তোমার পড়াশোনা কেমন চলছে? নিজের খেয়াল রেখো এবং একটু সময় দিয়ে অ্যাপে কিছু কুইজ খেলে নাও তো! ✨`
+ ];
+ const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+ toast(randomMsg);
+ localStorage.setItem("sigmamind_last_reminder", Date.now());
+}
+
+function validQuestion(q){
+ return !!q && typeof q==="object" &&
+  typeof q.id==="string" && q.id.trim().length>0 && q.id.length<=150 &&
+  typeof q.subject==="string" && VALID_SUBJECTS.includes(q.subject) &&
+  ((typeof q.q==="string" && q.q.trim().length>0) || (typeof q.bn==="string" && q.bn.trim().length>0)) &&
+  Array.isArray(q.options) && q.options.length>=2 && q.options.length<=8 &&
+  q.options.every(x=>typeof x==="string" && x.trim().length>0 && x.length<=1000) &&
+  Number.isInteger(q.answer) && q.answer>=0 && q.answer<q.options.length &&
+  typeof q.explanation==="string" &&
+  (q.difficulty===undefined || ["normal","hard"].includes(q.difficulty));
+}
+
+function normalizeProgress(p){
+ const out=freshProgress();
+ if(!p || typeof p!=="object")return out;
+ out.played=Number.isSafeInteger(p.played) && p.played>=0 ? p.played : 0;
+ out.correct=Number.isSafeInteger(p.correct) && p.correct>=0 ? Math.min(p.correct,out.played) : 0;
+ out.wrong=Array.isArray(p.wrong)?p.wrong.filter(w=>
+  w && typeof w.id==="string" && (typeof w.q==="string" || typeof w.bn==="string") &&
+  Array.isArray(w.options) && Number.isInteger(w.answer) &&
+  w.answer>=0 && w.answer<w.options.length
+ ).slice(-100):[];
+ out.learnedVocabulary=Array.isArray(p.learnedVocabulary)?
+  [...new Set(p.learnedVocabulary.filter(id=>BASIC_VOCAB.some(w=>w[0]===id)))]:[];
+ return out;
+}
+
+function normalizeSettings(s){
+ const lang=s && VALID_LANGUAGES.includes(s.language)?s.language:"both";
+ return {language:lang};
+}
+
+function loadDB(){
+ try{
+  const raw=localStorage.getItem(KEY);
+  if(!raw)return;
+  const saved=JSON.parse(raw);
+  if(!saved || typeof saved!=="object")return;
+  db.progress=normalizeProgress(saved.progress);
+  db.settings=normalizeSettings(saved.settings);
+  const map=new Map(BUILTIN.map(q=>[q.id,q]));
+  if(Array.isArray(saved.questions)){
+   saved.questions.forEach(q=>{if(validQuestion(q))map.set(q.id,q);});
+  }
+  db.questions=[...map.values()];
+ }catch(e){
+  console.warn("Could not load saved data",e);
+  toast("আগের সেভ করা ডেটা পড়া যায়নি।");
+ }
+}
+
+function saveDB(showError=true){
+ try{
+  localStorage.setItem(KEY,JSON.stringify(db));
+  return true;
+ }catch(e){
+  if(showError)toast("স্টোরেজ পূর্ণ বা বন্ধ! Progress Backup করে রাখো।");
+  return false;
+ }
+}
+
+function toast(message){
+ const t=document.getElementById("toast");
+ t.textContent=String(message);
+ t.style.display="block";
+ clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>{t.style.display="none";},4500);
+}
+
+function showPage(page,pushHistory=true){
+ const validPages=["home","vocabularyLearn","quiz","result","wrongPage","settings","games"];
+ if(!validPages.includes(page))page="home";
+ clearInterval(quiz.interval);
+ quiz.interval=null;
+ clearInterval(brainGame.interval);
+ brainGame.interval=null;
+ currentPage=page;
+ if(pushHistory){
+  try{history.pushState({page},"","#"+page);}catch(e){}
+ }
+ validPages.forEach(id=>{
+  const el=document.getElementById(id);
+  if(id===page){
+   el.classList.remove("hidden","page-transition");
+   void el.offsetWidth;
+   el.classList.add("page-transition");
+  }else{
+   el.classList.add("hidden");
+  }
+ });
+ ["navHome","navWrong","navSettings"].forEach(id=>{
+  document.getElementById(id).classList.remove("active");
+ });
+ if(page==="home")document.getElementById("navHome").classList.add("active");
+ if(page==="wrongPage")document.getElementById("navWrong").classList.add("active");
+ if(page==="settings"){
+  document.getElementById("navSettings").classList.add("active");
+  document.getElementById("language").value=db.settings.language;
+  updateUserNameUI();
+  updateProgressSummary();
+ }
+ window.scrollTo({top:0,behavior:"auto"});
+}
+
+function updateProgressSummary(){
+ document.getElementById("progressSummary").textContent=
+  `মোট উত্তর: ${db.progress.played} · সঠিক: ${db.progress.correct} · ভুল প্রশ্ন: ${db.progress.wrong.length} · শেখা শব্দ: ${getLearnedVocabulary().length}`;
+}
+
+window.addEventListener("popstate",function(){
+ if(currentPage!=="home"){
+  renderHome();
+  showPage("home",false);
+  return;
+ }
+ const now=Date.now();
+ if(now-lastBackPressTime<2000){
+  lastBackPressTime=0;
+  toast("এখন ব্রাউজার বা অ্যাপের Back/Close ব্যবহার করে বের হতে পারো।");
+ }else{
+  lastBackPressTime=now;
+  toast("হোমে আছো। বের হতে ২ সেকেন্ডের মধ্যে আবার Back চাপো।");
+ }
+});
+
+function goHome(){
+ clearInterval(quiz.interval);
+ clearInterval(brainGame.interval);
+ renderHome();
+ showPage("home");
+}
+
+function renderHome(){
+ updateUserNameUI();
+ const host=document.getElementById("subjects");
+ host.replaceChildren();
+ SUBJECTS.forEach(s=>{
+  const b=document.createElement("button");
+  b.className="subject";
+  const emoji=document.createElement("div");
+  emoji.className="emoji";emoji.textContent=s.icon;
+  const title=document.createElement("strong");
+  title.textContent=s.name;
+  const desc=document.createElement("small");
+  desc.textContent=s.desc;
+  b.append(emoji,title,desc);
+  b.onclick=()=>s.id==="vocabulary"?openVocabularyLearn():startQuiz(s.id);
+  host.appendChild(b);
+ });
+ document.getElementById("totalPlayed").textContent=db.progress.played;
+ document.getElementById("totalCorrect").textContent=db.progress.correct;
+ document.getElementById("accuracy").textContent=
+  (db.progress.played?Math.round(db.progress.correct/db.progress.played*100):0)+"%";
+ updateProgressSummary();
+}
+
+function getTodayVocabulary(){
+ const now=new Date();
+ const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+ const base=new Date(2026,0,1);
+ const days=Math.max(0,Math.floor((today-base)/86400000));
+ const start=(days%3)*20;
+ return BASIC_VOCAB.slice(start,start+20);
+}
+
+function getLearnedVocabulary(){
+ return [...new Set(db.progress.learnedVocabulary)]
+  .map(id=>BASIC_VOCAB.find(w=>w[0]===id)).filter(Boolean);
+}
+
+function openVocabularyLearn(){
+ renderVocabularyLearn();
+ showPage("vocabularyLearn");
+}
+
+function renderVocabularyLearn(){
+ const host=document.getElementById("vocabWordList");
+ host.replaceChildren();
+ const words=getTodayVocabulary();
+ const learned=new Set(db.progress.learnedVocabulary);
+ const learnedToday=words.filter(w=>learned.has(w[0])).length;
+ const today=new Date();
+ const todayMidnight=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+ const dayNumber=Math.max(1,Math.floor((todayMidnight-new Date(2026,0,1))/86400000)+1);
+ document.getElementById("vocabDayTitle").textContent=
+  `আজকের ২০টি শব্দ · সেট ${Math.floor((dayNumber-1)%3)+1}`;
+ document.getElementById("vocabCounts").textContent=
+  `আজ শিখেছ ${learnedToday}/20টি · মোট শিখেছ ${learned.size}/${BASIC_VOCAB.length}টি`;
+ document.getElementById("vocabBar").style.width=(learnedToday/20*100)+"%";
+
+ words.forEach(w=>{
+  const card=document.createElement("article");
+  card.className="vocab-card"+(learned.has(w[0])?" learned":"");
+  const word=document.createElement("div");
+  word.className="vocab-word";word.textContent=w[1];
+  const pronunciation=document.createElement("div");
+  pronunciation.className="vocab-pronunciation";
+  pronunciation.textContent="উচ্চারণ: "+w[2];
+  const meaning=document.createElement("div");
+  meaning.className="vocab-meaning";
+  meaning.textContent="অর্থ: "+w[3];
+  const example=document.createElement("div");
+  example.className="vocab-example";
+  example.textContent="Example: "+w[4];
+  const translation=document.createElement("div");
+  translation.className="vocab-example";
+  translation.textContent="বাংলা: "+w[5];
+  const button=document.createElement("button");
+  button.className="vocab-learned";
+  button.textContent=learned.has(w[0])?"✓ শেখা হয়েছে":"শিখেছি ✓";
+  button.disabled=learned.has(w[0]);
+  button.onclick=()=>markVocabularyLearned(w[0]);
+  card.append(word,pronunciation,meaning,example,translation,button);
+  host.appendChild(card);
+ });
+}
+
+function markVocabularyLearned(id){
+ if(db.progress.learnedVocabulary.includes(id)){
+  toast("এই শব্দটি আগেই শেখা হয়েছে।");return;
+ }
+ const old=[...db.progress.learnedVocabulary];
+ db.progress.learnedVocabulary.push(id);
+ if(!saveDB()){
+  db.progress.learnedVocabulary=old;
+  return;
+ }
+ renderVocabularyLearn();
+ toast("দারুণ! শব্দটি শেখা শব্দের তালিকায় যোগ হয়েছে।");
+}
+
+function shuffle(list){
+ const a=[...list];
+ for(let i=a.length-1;i>0;i--){
+  const j=Math.floor(Math.random()*(i+1));
+  [a[i],a[j]]=[a[j],a[i]];
+ }
+ return a;
+}
+
+function startQuiz(subject){
+ clearInterval(quiz.interval);
+ quiz.interval=null;
+ quiz.subject=subject;
+ quiz.mode=document.getElementById("quickMode").value;
+
+ if(subject==="vocabulary"){
+  const learned=getLearnedVocabulary();
+  if(!learned.length){
+   toast("আগে Vocabulary থেকে কিছু শব্দ শিখে নাও।");
+   openVocabularyLearn();return;
+  }
+  quiz.list=shuffle(learned).map(w=>{
+   const candidates=shuffle(BASIC_VOCAB.filter(x=>x[0]!==w[0] && x[3]!==w[3]));
+   const distractors=[];
+   for(const item of candidates){
+    if(!distractors.includes(item[3]))distractors.push(item[3]);
+    if(distractors.length===3)break;
+   }
+   const options=shuffle([w[3],...distractors]);
+   return {
+    id:"LEARNED-"+w[0],subject:"vocabulary",topic:"Learned Vocabulary",
+    difficulty:"normal",
+    q:"What is the Bengali meaning of '"+w[1]+"'?",
+    bn:`${w[1]} (${w[2]}) শব্দের বাংলা অর্থ কী?`,
+    options,answer:options.indexOf(w[3]),
+    explanation:`${w[1]} = ${w[3]}. Example: ${w[4]} — ${w[5]}`
+   };
+  });
+  quiz.index=0;quiz.score=0;quiz.correct=0;
+  showPage("quiz");renderQuestion();return;
+ }
+
+ let list=db.questions.filter(q=>(subject==="all" || q.subject===subject));
+ if(quiz.mode==="hard"){
+  const hard=list.filter(q=>q.difficulty==="hard");
+  if(hard.length)list=hard;
+  else toast("এই বিষয়ে Hard প্রশ্ন নেই; উপলভ্য প্রশ্ন ব্যবহার হচ্ছে।");
+ }
+ if(!list.length){
+  toast("এই বিষয়ে প্রশ্ন নেই। Settings থেকে JSON Import করো।");
+  return;
+ }
+ quiz.list=shuffle(list).slice(0,10);
+ quiz.index=0;quiz.score=0;quiz.correct=0;
+ showPage("quiz");renderQuestion();
+}
+
+function currentQuestion(){return quiz.list[quiz.index]}
+
+function renderQuestion(){
+ clearInterval(quiz.interval);
+ quiz.answered=false;
+ const q=currentQuestion();
+ if(!q){finishQuiz();return;}
+ const s=SUBJECTS.find(x=>x.id===q.subject);
+ document.getElementById("quizSubject").textContent=s?s.name:q.subject;
+ document.getElementById("counter").textContent=`প্রশ্ন ${quiz.index+1}/${quiz.list.length}`;
+ document.getElementById("points").textContent=`স্কোর: ${quiz.score}`;
+ document.getElementById("bar").style.width=(quiz.index/quiz.list.length*100)+"%";
+ const lang=db.settings.language;
+ let questionText;
+ const primaryText=q.bn || q.q;
+ const secondaryText=q.q && q.bn && q.q!==q.bn ? q.q : "";
+ if(lang==="en")questionText=q.q || q.bn;
+ else if(lang==="both" && secondaryText)questionText=primaryText+"\n"+secondaryText;
+ else questionText=primaryText;
+ document.getElementById("question").textContent=questionText;
+ const host=document.getElementById("options");
+ host.replaceChildren();
+ q.options.forEach((opt,i)=>{
+  const b=document.createElement("button");
+  b.className="option";
+  b.textContent=String.fromCharCode(65+i)+". "+opt;
+  b.onclick=()=>chooseAnswer(i);
+  host.appendChild(b);
+ });
+ document.getElementById("feedback").classList.add("hidden");
+ document.getElementById("next").classList.add("hidden");
+ quiz.time=quiz.mode==="hard"?10:20;
+ document.getElementById("timer").textContent=quiz.time;
+ quiz.interval=setInterval(()=>{
+  if(quiz.answered)return;
+  quiz.time--;
+  document.getElementById("timer").textContent=quiz.time;
+  if(quiz.time<=0)chooseAnswer(-1);
+ },1000);
+}
+
+function chooseAnswer(index){
+ if(quiz.answered)return;
+ const q=currentQuestion();
+ if(!q)return;
+ quiz.answered=true;
+ clearInterval(quiz.interval);quiz.interval=null;
+ const ok=index===q.answer;
+ const oldProgress=JSON.stringify(db.progress);
+ db.progress.played++;
+ if(ok){
+  quiz.correct++;
+  quiz.score+=quiz.mode==="hard"?20:10;
+  db.progress.correct++;
+ }else{
+  const existing=db.progress.wrong.find(w=>w.id===q.id);
+  if(!existing){
+   db.progress.wrong.push({
+    id:q.id,subject:q.subject,q:q.q,bn:q.bn,
+    options:[...q.options],answer:q.answer,
+    explanation:q.explanation,chosen:index
+   });
+  }else existing.chosen=index;
+  db.progress.wrong=db.progress.wrong.slice(-100);
+ }
+ if(!saveDB()){
+  try{db.progress=normalizeProgress(JSON.parse(oldProgress));}catch(e){}
+ }
+ [...document.getElementById("options").children].forEach((b,i)=>{
+  b.disabled=true;
+  if(i===q.answer)b.classList.add("correct");
+  else if(i===index)b.classList.add("wrong");
+ });
+ const f=document.getElementById("feedback");
+ f.classList.remove("hidden");
+ const status=index<0?"সময় শেষ!":ok?"সঠিক উত্তর! 🎉":"ভুল উত্তর!";
+ f.textContent=status+" "+q.explanation;
+ document.getElementById("points").textContent=`স্কোর: ${quiz.score}`;
+ document.getElementById("bar").style.width=((quiz.index+1)/quiz.list.length*100)+"%";
+ const next=document.getElementById("next");
+ next.classList.remove("hidden");
+ next.textContent=quiz.index===quiz.list.length-1?"ফলাফল দেখো →":"পরের প্রশ্ন →";
+ renderHome();
+}
+
+function nextQuestion(){
+ if(!quiz.answered){toast("আগে একটি উত্তর নির্বাচন করো।");return;}
+ quiz.index++;
+ if(quiz.index>=quiz.list.length){finishQuiz();return;}
+ renderQuestion();
+}
+
+function finishQuiz(){
+ clearInterval(quiz.interval);quiz.interval=null;
+ showPage("result");
+ const pct=quiz.list.length?Math.round(quiz.correct/quiz.list.length*100):0;
+ document.getElementById("finalScore").textContent=quiz.score;
+ document.getElementById("finalCorrect").textContent=quiz.correct+"/"+quiz.list.length;
+ document.getElementById("finalPercent").textContent=pct+"%";
+ document.getElementById("resultText").textContent=
+  pct>=80?"দারুণ! শেখা চালিয়ে যাও।":pct>=50?"ভালো চেষ্টা! ভুলগুলো রিভিশন করো।":"আবার চেষ্টা করো—অনুশীলনে উন্নতি হবে।";
+ renderHome();
+}
+
+function showWrong(){
+ const host=document.getElementById("wrongList");
+ host.replaceChildren();
+ if(!db.progress.wrong.length){
+  host.textContent="এখনো কোনো ভুল উত্তর নেই।";
+  showPage("wrongPage");return;
+ }
+ db.progress.wrong.slice().reverse().forEach(w=>{
+  const card=document.createElement("div");card.className="panel";
+  const title=document.createElement("strong");
+  title.textContent=w.bn || w.q || "প্রশ্ন";
+  card.appendChild(title);
+  if(w.q && w.bn && w.q!==w.bn){
+   const en=document.createElement("p");en.className="muted";en.textContent=w.q;card.appendChild(en);
+  }
+  const ans=document.createElement("p");
+  ans.textContent="সঠিক উত্তর: "+(w.options && w.options[w.answer]!==undefined?w.options[w.answer]:"N/A");
+  card.appendChild(ans);
+  const ex=document.createElement("p");ex.className="muted";ex.textContent=w.explanation||"";card.appendChild(ex);
+  const remove=document.createElement("button");remove.className="btn secondary";
+  remove.textContent="রিভিশন তালিকা থেকে সরাও";
+  remove.onclick=()=>{
+   const old=db.progress.wrong;
+   db.progress.wrong=old.filter(x=>x.id!==w.id);
+   if(!saveDB()){db.progress.wrong=old;return;}
+   showWrong();
+  };
+  card.appendChild(remove);host.appendChild(card);
+ });
+ showPage("wrongPage");
+}
+
+function saveSettings(){
+ const old=db.settings;
+ db.settings=normalizeSettings({language:document.getElementById("language").value});
+ if(!saveDB()){db.settings=old;document.getElementById("language").value=old.language;return;}
+ toast("সেটিংস সেভ হয়েছে।");
+}
+
+async function importQuestions(){
+ const file=document.getElementById("importFile").files[0];
+ const pasted=document.getElementById("jsonPaste").value.trim();
+ if(!file && !pasted){toast("JSON ফাইল বাছাই করো অথবা JSON কোড পেস্ট করো।");return;}
+ try{
+  let text;
+  if(pasted)text=pasted;
+  else text=await new Promise((resolve,reject)=>{
+   const reader=new FileReader();
+   reader.onload=()=>resolve(String(reader.result||""));
+   reader.onerror=()=>reject(new Error("ফাইল পড়া যায়নি"));
+   reader.readAsText(file);
+  });
+  const parsed=JSON.parse(text);
+  if(!parsed || typeof parsed!=="object")throw Error("JSON অবজেক্ট সঠিক নয়।");
+
+  const hasQuestions=Array.isArray(parsed)?true:Array.isArray(parsed.questions);
+  const arr=Array.isArray(parsed)?parsed:parsed.questions;
+  if(!hasQuestions || !Array.isArray(arr) || !arr.length)throw Error("প্রশ্নের তালিকা পাওয়া যায়নি।");
+  if(arr.length>5000)throw Error("একবারে সর্বোচ্চ ৫০০০টি প্রশ্ন ইমপোর্ট করা যাবে।");
+  if(arr.some(q=>!validQuestion(q)))throw Error("এক বা একাধিক প্রশ্নের গঠন ভুল। বিষয়, অপশন বা সঠিক উত্তর পরীক্ষা করো।");
+
+  const hasProgress=!!parsed.progress && typeof parsed.progress==="object";
+  const hasSettings=!!parsed.settings && typeof parsed.settings==="object";
+  const nextProgress=hasProgress?normalizeProgress(parsed.progress):db.progress;
+  const nextSettings=hasSettings?normalizeSettings(parsed.settings):db.settings;
+  const map=new Map(db.questions.map(q=>[q.id,q]));
+  let added=0,updated=0;
+  arr.forEach(q=>{
+   if(map.has(q.id))updated++;else added++;
+   map.set(q.id,{...q,options:[...q.options]});
+  });
+
+  const oldDB=db;
+  db={
+   questions:[...map.values()],
+   progress:nextProgress,
+   settings:nextSettings
+  };
+  if(!saveDB()){db=oldDB;return;}
+
+  renderHome();
+  document.getElementById("language").value=db.settings.language;
+  document.getElementById("jsonPaste").value="";
+  document.getElementById("importFile").value="";
+  document.getElementById("fileNameDisplay").textContent = "ফাইল সিলেক্ট করতে এখানে চাপুন (.json)";
+  toast(`ইমপোর্ট সফল: নতুন ${added}, আপডেট ${updated}${hasProgress?" · অগ্রগতিও ফিরেছে":""}`);
+ }catch(e){
+  toast("ইমপোর্ট ব্যর্থ: "+(e && e.message?e.message:"ফাইল পড়া যায়নি"));
+ }
+}
+
+function downloadJSON(name,obj){
+ let url=null;
+ try{
+  const blob=new Blob([JSON.stringify(obj,null,2)],{type:"application/json;charset=utf-8"});
+  url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download=name;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>{if(url)URL.revokeObjectURL(url);},3000);
+  toast("ডাউনলোড শুরু করার চেষ্টা করা হয়েছে।");
+ }catch(e){
+  if(url)URL.revokeObjectURL(url);
+  toast("Export ব্যর্থ: "+(e.message||"সমস্যা হয়েছে"));
+ }
+}
+function exportQuestions(){
+ downloadJSON("sigmamind-questions.json",{questions:db.questions});
+}
+function exportProgress(){
+ downloadJSON("sigmamind-backup.json",{
+  version:2,exportedAt:new Date().toISOString(),
+  progress:db.progress,settings:db.settings,questions:db.questions
+ });
+}
+
+function resetProgress(){
+ if(!confirm("তোমার স্কোর, ভুল উত্তর ও শেখা শব্দের তালিকা মুছে ফেলবে? প্রশ্নব্যাংক থাকবে।"))return;
+ const old=db.progress;
+ db.progress=freshProgress();
+ if(!saveDB()){db.progress=old;return;}
+ renderHome();
+ updateProgressSummary();
+ toast("অগ্রগতি ও শেখা শব্দের তালিকা মুছে ফেলা হয়েছে।");
+}
+
+const BRAIN_GAMES={
+ sequence:[
+  {q:"3, 8, 15, 24, 35, ?",o:["46","48","47","45"],a:1,e:"পার্থক্য ৫, ৭, ৯, ১১; পরের পার্থক্য ১৩। উত্তর ৪৮।"},
+  {q:"2, 6, 18, 54, ?",o:["108","162","216","154"],a:1,e:"প্রতিবার ৩ দিয়ে গুণ হচ্ছে। উত্তর ১৬২।"},
+  {q:"1, 4, 9, 16, 25, ?",o:["30","35","36","49"],a:2,e:"এগুলো ১², ২², ৩², ৪², ৫²; পরেরটি ৬² = ৩৬।"},
+  {q:"100, 96, 88, 76, 60, ?",o:["44","40","42","36"],a:1,e:"বিয়োগ হচ্ছে ৪, ৮, ১২, ১৬; এরপর ২০। উত্তর ৪০।"},
+  {q:"1, 1, 2, 3, 5, 8, ?",o:["11","12","13","15"],a:2,e:"আগের দুই সংখ্যা যোগ করে পরের সংখ্যা পাওয়া যায়। উত্তর ১৩।"}
+ ],
+ logic:[
+  {q:"সব গোলাপ ফুল। কোনটি নিশ্চিতভাবে সত্য?",o:["সব গোলাপ দ্রুত ঝরে","কিছু গোলাপ দ্রুত ঝরে","সব গোলাপ ফুল","কোনো ফুল ঝরে না"],a:2,e:"প্রদত্ত তথ্য থেকে নিশ্চিতভাবে বলা যায় সব গোলাপ ফুল।"},
+  {q:"রহিম করিমের চেয়ে লম্বা। করিম জামালের চেয়ে লম্বা। সবচেয়ে খাটো কে?",o:["রহিম","করিম","জামাল","নিশ্চিত নয়"],a:2,e:"রহিম > করিম > জামাল। তাই জামাল সবচেয়ে খাটো।"},
+  {q:"আজ সোমবার হলে ১০০ দিন পরে কী বার হবে?",o:["মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার"],a:1,e:"১০০ কে ৭ দিয়ে ভাগ করলে ভাগশেষ ২। সোমবারের ২ দিন পরে বুধবার।"},
+  {q:"একটি দৌড়ে তুমি দ্বিতীয় ব্যক্তিকে পেছনে ফেললে এখন তুমি কত নম্বরে?",o:["প্রথম","দ্বিতীয়","তৃতীয়","চতুর্থ"],a:1,e:"দ্বিতীয় ব্যক্তিকে পেছনে ফেললে তুমি তার অবস্থান নেবে—দ্বিতীয়।"},
+  {q:"একটি পরিবারের ২ বাবা ও ২ ছেলে, কিন্তু মোট ৩ জন। কীভাবে সম্ভব?",o:["ভুল প্রশ্ন","দাদা, বাবা ও ছেলে","দুই ভাই ও বাবা","তিন বন্ধু"],a:1,e:"দাদা একজন বাবা, তাঁর ছেলে একই সঙ্গে বাবা ও ছেলে, আর নাতি ছেলে।"}
+ ],
+ math:[
+  {q:"25 × 16 = ?",o:["350","400","425","450"],a:1,e:"২৫ × ১৬ = ৪০০।"},
+  {q:"একটি সংখ্যার ২০% হলো ৫০। সংখ্যাটি কত?",o:["200","250","300","150"],a:1,e:"৫০ ÷ ০.২০ = ২৫০।"},
+  {q:"15² − 12² = ?",o:["69","81","27","45"],a:1,e:"২২এস − ১৪৪ = ৮১।"},
+  {q:"144-এর বর্গমূল কত?",o:["10","11","12","14"],a:2,e:"১২ × ১২ = ১৪৪।"},
+  {q:"একটি পণ্যের দাম ৮০০ টাকা। ২৫% ছাড়ের পর দাম কত?",o:["500","550","600","650"],a:2,e:"৮০০ টাকার ২৫% = ২০০। তাই দাম ৬০০ টাকা।"}
+ ],
+ odd:[
+  {q:"কোনটি অন্যগুলোর থেকে আলাদা?",o:["ত্রিভুজ","বর্গ","বৃত্ত","ঘনক"],a:3,e:"ঘনক ত্রিমাত্রিক; বাকিগুলো সমতল আকৃতি।"},
+  {q:"কোনটি আলাদা?",o:["2","3","5","9"],a:3,e:"২, ৩, ৫ মৌলিক সংখ্যা; ৯ মৌলিক নয়।"},
+  {q:"কোনটি আলাদা?",o:["January","March","May","Tuesday"],a:3,e:"প্রথম তিনটি মাস; Tuesday সপ্তাহের একটি দিন।"},
+  {q:"কোনটি আলাদা?",o:["কুকুর","বাঘ","বিড়াল","চড়ুই"],a:3,e:"চড়ুই পাখি; বাকিগুলো স্তন্যপায়ী প্রাণী।"},
+  {q:"কোনটি আলাদা?",o:["বর্গ","আয়তক্ষেত্র","ত্রিভুজ","কিলোগ্রাম"],a:3,e:"কিলোগ্রাম ভরের একক; বাকিগুলো জ্যামিতিক আকৃতি।"}
+ ]
+};
+
+function startBrainGame(){
+ clearInterval(brainGame.interval);
+ const type=document.getElementById("gameType").value;
+ brainGame.list=shuffle(BRAIN_GAMES[type]||BRAIN_GAMES.sequence);
+ brainGame.index=0;brainGame.score=0;
+ document.getElementById("gameArea").classList.remove("hidden");
+ renderBrainGame();
+}
+
+function renderBrainGame(){
+ clearInterval(brainGame.interval);
+ brainGame.done=false;
+ const item=brainGame.list[brainGame.index];
+ document.getElementById("gameCounter").textContent=
+  `চ্যালেঞ্জ ${brainGame.index+1}/${brainGame.list.length}`;
+ document.getElementById("gameBar").style.width=
+  (brainGame.index/brainGame.list.length*100)+"%";
+ document.getElementById("gameQuestion").textContent=item.q;
+ document.getElementById("gameFeedback").textContent="";
+ document.getElementById("gameNext").classList.add("hidden");
+ const host=document.getElementById("gameOptions");
+ host.replaceChildren();
+ item.o.forEach((opt,i)=>{
+  const b=document.createElement("button");
+  b.className="option";
+  b.textContent=String.fromCharCode(65+i)+". "+opt;
+  b.onclick=()=>answerBrainGame(i);
+  host.appendChild(b);
+ });
+ brainGame.time=10;
+ document.getElementById("gameTimer").textContent=10;
+ brainGame.interval=setInterval(()=>{
+  if(brainGame.done)return;
+  brainGame.time--;
+  document.getElementById("gameTimer").textContent=brainGame.time;
+  if(brainGame.time<=0)answerBrainGame(-1);
+ },1000);
+}
+
+function answerBrainGame(index){
+ if(brainGame.done)return;
+ brainGame.done=true;
+ clearInterval(brainGame.interval);brainGame.interval=null;
+ const item=brainGame.list[brainGame.index];
+ const ok=index===item.a;
+ const oldProgress=JSON.stringify(db.progress);
+ db.progress.played++;
+ if(ok){
+  brainGame.score++;
+  db.progress.correct++;
+ }
+ if(!saveDB()){
+  try{db.progress=normalizeProgress(JSON.parse(oldProgress));}catch(e){}
+ }
+ const buttons=[...document.getElementById("gameOptions").children];
+ buttons.forEach((b,i)=>{
+  b.disabled=true;
+  if(i===item.a)b.classList.add("correct");
+  else if(i===index)b.classList.add("wrong");
+ });
+ document.getElementById("gameFeedback").textContent=
+  (index<0?"সময় শেষ! ":ok?"সঠিক উত্তর! ":"সঠিক উত্তর: "+item.o[item.a]+". ")+item.e;
+ const next=document.getElementById("gameNext");
+ next.classList.remove("hidden");
+ next.textContent=brainGame.index===brainGame.list.length-1?"ফলাফল দেখো →":"পরের চ্যালেঞ্জ →";
+ renderHome();
+}
+
+function nextBrainGame(){
+ if(!brainGame.done)return;
+ brainGame.index++;
+ if(brainGame.index>=brainGame.list.length){
+  clearInterval(brainGame.interval);brainGame.interval=null;
+  document.getElementById("gameBar").style.width="100%";
+  document.getElementById("gameQuestion").textContent=
+   `গেম শেষ! তোমার স্কোর ${brainGame.score}/${brainGame.list.length}`;
+  document.getElementById("gameOptions").replaceChildren();
+  document.getElementById("gameFeedback").textContent=
+   brainGame.score===brainGame.list.length?
+   "দারুণ! সবগুলো সঠিক!":`আবার চেষ্টা করো, ${getUserName()}!`;
+  document.getElementById("gameNext").classList.add("hidden");
+  return;
+ }
+ renderBrainGame();
+}
+
+/* App Initialization */
+loadDB();
+renderHome();
+try{history.replaceState({page:"home"},"","#home");}catch(e){}
+showPage("home",false);
+
+window.addEventListener("load", function(){
+ if(!localStorage.getItem(USER_KEY)){
+  document.getElementById("nameModal").classList.remove("hidden");
+ }
+
+ setTimeout(()=>{
+  const splash=document.getElementById("splashScreen");
+  if(splash){
+   splash.classList.add("fade-out");
+   setTimeout(()=>splash.remove(), 500);
+  }
+ }, 1600);
+
+ initReminderSystem();
+});
+</script>
+</body>
+</html>
